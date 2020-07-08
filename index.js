@@ -29,13 +29,15 @@ app.get("/", (req, res) => {
 app.get("/:id", (req, res) => {
   // TODO: Implement get task by id, wit error if task is not found. 
   const foundId = tasks.find(element => {
-  return element.id == req.params.id 
+  element.id == req.params.id 
   })
-  if (foundId) {
-    res.json(foundId) 
-  } else {
-    res.json(`Error, Task # ${req.params.id} was not found`)
+  
+  if (!foundId) {
+    res.status(404).json({message: "Task was not found"})
   }
+
+  res.json(foundId)
+  
 
   })
 app.post('/', (req, res) => {
@@ -52,10 +54,13 @@ app.delete('/:id', (req, res) => {
   for( let i = 0; i < tasks.length; i++) {
     if ( tasks[i].id == idDelete) {
       tasks.splice(i, 1)
+      res.json({message: `The ${idDelete} was deleted`})
+    } else {
+      res.status(404).json({message: "Task was not found to be deleted"})
     }
    }
   
-   res.json(tasks)
+   
  });
 
 app.listen(3000, () => {
